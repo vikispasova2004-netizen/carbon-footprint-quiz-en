@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seeing the Unseen | Carbon Footprint Quiz</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#050816;color:#fff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:
+radial-gradient(circle at 20% 20%,rgba(0,255,170,.18),transparent 25%),
+radial-gradient(circle at 80% 10%,rgba(0,140,255,.18),transparent 25%),
+radial-gradient(circle at 70% 80%,rgba(120,0,255,.18),transparent 30%),
+#050816;z-index:-2}
+.stars{position:fixed;inset:0;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:40px 40px;opacity:.18;animation:move 80s linear infinite;z-index:-1}
+@keyframes move{from{transform:translateY(0)}to{transform:translateY(-600px)}}
+.wrap{max-width:900px;margin:auto;padding:40px 20px}
+.hero,.card,.result{background:rgba(255,255,255,.08);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+h1{font-size:46px;margin:0;background:linear-gradient(90deg,#7ef,#6f9,#fff);-webkit-background-clip:text;color:transparent}
+p{line-height:1.7;color:#d8def2}
+.center{text-align:center}
+.btn{display:inline-block;margin-top:15px;padding:14px 26px;border:none;border-radius:14px;background:linear-gradient(90deg,#00c389,#2e8bff);color:#fff;font-size:18px;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+#quiz,#result{display:none}
+.progress{height:12px;background:#26314f;border-radius:99px;overflow:hidden;margin:24px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#00e38f,#5ad6ff);transition:.35s}
+.question{font-size:28px;margin-bottom:20px}
+.opt{display:block;width:100%;margin:10px 0;padding:16px;border-radius:14px;border:0;background:#1d2848;color:#fff;font-size:17px;cursor:pointer;transition:.2s}
+.opt:hover{background:#2d3d6a;transform:scale(1.02)}
+.badge{font-size:34px;margin:10px 0}
+meter{width:100%;height:24px}
+small{color:#9fb0d8}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="wrap">
+<div id="hero" class="hero center">
+<h1>🌍 What's Your Carbon Footprint?</h1>
+<p><strong>Seeing the Unseen</strong><br>Every choice leaves a mark on our planet. Complete this one‑minute mission and discover your climate impact.</p>
+<button class="btn" onclick="startQuiz()">🚀 Start Mission</button>
+</div>
+
+<div id="quiz" class="card">
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="question" id="q"></div>
+<div id="answers"></div>
+<small id="count"></small>
+</div>
+
+<div id="result" class="result center">
+<div class="badge" id="badge"></div>
+<h2 id="title"></h2>
+<meter id="m" min="0" max="30"></meter>
+<h3 id="score"></h3>
+<p id="advice"></p>
+<p><a id="map" href="#" style="color:#7ef;text-decoration:none;font-weight:bold">🌍 Explore Bulgaria's Carbon Map</a></p>
+<button class="btn" onclick="location.reload()">🔄 Play Again</button>
+</div>
+</div>
+
+<script>
+const mapUrl="https://example.com";
+document.getElementById("map").href=mapUrl;
+const qs=[
+["How do you usually travel?",["Walking or cycling",3],["Public transport",2],["Private car",1],["SUV / Diesel",0]],
+["How do you heat your home?",["Renewables",3],["District heating",2],["Gas",1],["Coal",0]],
+["How often do you recycle?",["Always",3],["Often",2],["Sometimes",1],["Never",0]],
+["How do you shop?",["Only what I need",3],["Prefer local products",2],["Imported goods",1],["Impulse buying",0]],
+["How energy efficient is your home?",["Very",3],["Average",2],["Low",1],["Poor",0]],
+["How often do you fly?",["Never",3],["Once/year",2],["2-3",1],["4+",0]],
+["Do you use reusable bottles/bags?",["Always",3],["Often",2],["Sometimes",1],["Never",0]],
+["Do you switch off unused devices?",["Always",3],["Usually",2],["Sometimes",1],["Rarely",0]],
+["Do you support renewable energy?",["Yes",3],["Somewhat",2],["Not sure",1],["No",0]],
+["Would you change habits to reduce emissions?",["Definitely",3],["Probably",2],["Maybe",1],["No",0]]
+];
+let i=0,s=0;
+function startQuiz(){hero.style.display="none";quiz.style.display="block";render();}
+function render(){
+bar.style.width=(i/qs.length*100)+"%";
+count.textContent=`Question ${i+1} of ${qs.length}`;
+q.textContent=qs[i][0];
+answers.innerHTML="";
+for(let j=1;j<qs[i].length;j++){
+let b=document.createElement("button");
+b.className="opt";b.textContent=qs[i][j][0];
+b.onclick=()=>{s+=qs[i][j][1];i++;if(i<qs.length)render();else finish();};
+answers.appendChild(b);
+}}
+function finish(){
+quiz.style.display="none";result.style.display="block";bar.style.width="100%";m.value=s;
+score.textContent=`Score: ${s} / 30`;
+if(s>=26){badge.textContent="🌱";title.textContent="Eco Hero";advice.textContent="Outstanding! Your lifestyle reflects strong climate awareness. Keep inspiring others.";}
+else if(s>=19){badge.textContent="🌍";title.textContent="Climate Guardian";advice.textContent="Great work! A few small improvements can reduce your footprint even more.";}
+else if(s>=11){badge.textContent="⚖️";title.textContent="Carbon Aware";advice.textContent="You're on the right path. Focus on transport, energy efficiency and waste reduction.";}
+else{badge.textContent="🔥";title.textContent="Time for Change";advice.textContent="Every action matters. Start with public transport, recycling and saving energy.";}
+}
+</script>
+</body></html>
